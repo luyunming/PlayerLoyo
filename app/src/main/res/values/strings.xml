@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">PlayerLoyo</string>
+    <string name="guide_activity">引导界面</string>
+    <string name="play_activity">播放界面</string>
+    <string name="no_music">没有歌曲</string>
+    <string name="nothing">无</string>
+    <string name="sang_year">年份：</string>
+    <string name="belong_group">专辑：</string>
+    <string name="singer">歌手：</string>
+</resources>
