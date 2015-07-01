@@ -21,7 +21,10 @@
             android:id="@+id/text_view_music_list_current_catalogue"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="50"/>
+            android:layout_weight="50"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="25sp"/>
         <ImageView
             android:id="@+id/image_view_music_list_search_in_there"
             android:layout_width="0dp"

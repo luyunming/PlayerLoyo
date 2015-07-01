@@ -1,10 +1,7 @@
 package cn.lym.playerloyo.activity;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -12,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import cn.lym.playerloyo.R;
@@ -24,17 +20,12 @@ import cn.lym.playerloyo.fragment.MusicWordsInCurrentPlay;
 import cn.lym.playerloyo.parcelable.MyBinderParcel;
 import cn.lym.playerloyo.service.MusicPlay;
 
-/**
- * Created by lym on 2015/6/23.
- */
 public class CurrentPlay extends FragmentActivity implements View.OnClickListener {
-    private int playModeIndex = Constant.REPEAT_ALL;
+
+    private int playModeIndex;
 
     private String musicPath;
-    private String musicName = "无";
-    private String musicSinger = "无";
-    //    private MediaPlayer musicPlayer = new MediaPlayer();
-    private Intent getMusicPath;
+    private String musicName;
     private ViewPager current_play_music;
     private ImageView toMusicList;
     private TextView showMusicName;
@@ -44,7 +35,7 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
     private Fragment musicInfo, musicImage, musicWords;
     private ArrayList<Fragment> fragmentList;
     private MusicPlay.MusicBinder musicBinder;
-    private ServiceConnection conn;
+    private Intent MusicListInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,59 +45,7 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
         initTextView();
         initViewPager();
         setTheseOnClickListener();
-        initPlayService();
-//        getMusicIntent();
-    }
-
-    @Override
-    protected void onActivityResult(int arg0, int arg1, Intent intent) {
-        if (arg0 == 200 && arg1 == 200) {
-            Bundle bundle = intent.getExtras();
-            musicPath = bundle.getString("musicPath");
-            initPlayMusic();
-        }
-    }
-
-    public void initPlayMusic() {
-        if (musicPath == null) {
-            playOrPause.setImageResource(R.drawable.img_play);
-        } else {
-            File file = new File(musicPath);
-            musicName = file.getName();
-            showMusicName.setText(musicName);
-            musicBinder.initMusic(musicPath);
-            musicBinder.startMusic();
-//            try {
-//                musicPlayer.reset();
-//                System.out.println(musicPath);
-//                musicPlayer.setDataSource(musicPath);
-//                musicPlayer.prepare();
-//                musicPlayer.start();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            playOrPause.setImageResource(R.drawable.img_pause);
-        }
-    }
-
-    public void initPlayService() {
-        Intent intent = new Intent(this, MusicPlay.class);
-        conn = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                musicBinder = (MusicPlay.MusicBinder) service;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-            }
-        };
-        bindService(intent, conn, BIND_AUTO_CREATE);
-    }
-
-    public void getMusicIntent() {
-        getMusicPath = getIntent();
-        musicPath = getMusicPath.getStringExtra("musicPath");
+        getMusicIntent();
     }
 
     public void initImageView() {
@@ -119,16 +58,6 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
         playPrevious = (ImageView) findViewById(R.id.image_view_play_previous);
         playOrPause = (ImageView) findViewById(R.id.image_view_play_or_pause);
         playNext = (ImageView) findViewById(R.id.image_view_play_next);
-    }
-
-    public void setTheseOnClickListener() {
-        playMode.setOnClickListener(this);
-        toMusicList.setOnClickListener(this);
-        showMore.setOnClickListener(this);
-        playPrevious.setOnClickListener(this);
-        playOrPause.setOnClickListener(this);
-        playNext.setOnClickListener(this);
-
     }
 
     public void initTextView() {
@@ -179,6 +108,35 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
         });
     }
 
+    public void setTheseOnClickListener() {
+        playMode.setOnClickListener(this);
+        toMusicList.setOnClickListener(this);
+        showMore.setOnClickListener(this);
+        playPrevious.setOnClickListener(this);
+        playOrPause.setOnClickListener(this);
+        playNext.setOnClickListener(this);
+
+    }
+
+    public void getMusicIntent() {
+        MusicListInfo = getIntent();
+        musicPath = MusicListInfo.getStringExtra("musicPath");
+        musicName = MusicListInfo.getStringExtra("musicName");
+        MyBinderParcel musicBinderParcel = MusicListInfo.getParcelableExtra("musicBinderParcel");
+        musicBinder = musicBinderParcel.getMyBinder();
+        initPlayMusic();
+
+    }
+
+    public void initPlayMusic() {
+        if (musicPath == null) {
+            playOrPause.setImageResource(R.drawable.img_play);
+        } else {
+            showMusicName.setText(musicName);
+            playOrPause.setImageResource(R.drawable.img_pause);
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch(view.getId()){
@@ -189,7 +147,7 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
                 changePlayState();
                 break;
             case R.id.image_view_current_play_to_music_list:
-                toMusicList();
+                returnMusicList();
                 break;
             case R.id.image_view_current_play_show_more:
                 exitThis();
@@ -225,7 +183,7 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
 
     public void changePlayState() {
         if (musicPath == null) {
-            initPlayMusic();
+            playOrPause.setImageResource(R.drawable.img_play);
         } else if (musicBinder.isPlaying()) {
             musicBinder.pauseMusic();
             playOrPause.setImageResource(R.drawable.img_play);
@@ -235,14 +193,12 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
         }
     }
 
-    public void toMusicList() {
-        Intent intent = new Intent(CurrentPlay.this, MusicList.class);
+    public void returnMusicList() {
         Bundle bundle = new Bundle();
-        bundle.putString("musicName", musicName);
-        bundle.putString("musicSinger", musicSinger);
-        intent.putExtra("musicBinder", new MyBinderParcel(musicBinder));
-        intent.putExtras(bundle);
-        startActivityForResult(intent, 200);
+        bundle.putString("musicPath", musicPath);
+        MusicListInfo.putExtras(bundle);
+        CurrentPlay.this.setResult(200, MusicListInfo);
+        CurrentPlay.this.finish();
     }
 
     public void exitThis() {

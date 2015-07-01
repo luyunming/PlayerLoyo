@@ -32,7 +32,7 @@ public class Main extends Activity implements View.OnClickListener{
                 toActivity(Main.this,Guide.class);
                 break;
             case R.id.to_current_play_activity_main:
-                toActivity(Main.this,CurrentPlay.class);
+                toActivity(Main.this, MusicList.class);
                 break;
             default:
                 break;

@@ -1529,16 +1529,18 @@ containing a value of this type.
         public static final int img_page_indicator=0x7f020040;
         public static final int img_page_unfocused=0x7f020041;
         public static final int img_pause=0x7f020042;
-        public static final int img_play=0x7f020043;
-        public static final int img_play_1=0x7f020044;
-        public static final int img_play_mode_repeat_all=0x7f020045;
-        public static final int img_play_mode_repeat_one=0x7f020046;
-        public static final int img_play_mode_sequence=0x7f020047;
-        public static final int img_play_mode_shuffle=0x7f020048;
-        public static final int img_play_next=0x7f020049;
-        public static final int img_play_previous=0x7f02004a;
-        public static final int img_return_current_play=0x7f02004b;
-        public static final int notification_template_icon_bg=0x7f02004c;
+        public static final int img_pause_1=0x7f020043;
+        public static final int img_play=0x7f020044;
+        public static final int img_play_1=0x7f020045;
+        public static final int img_play_list=0x7f020046;
+        public static final int img_play_mode_repeat_all=0x7f020047;
+        public static final int img_play_mode_repeat_one=0x7f020048;
+        public static final int img_play_mode_sequence=0x7f020049;
+        public static final int img_play_mode_shuffle=0x7f02004a;
+        public static final int img_play_next=0x7f02004b;
+        public static final int img_play_previous=0x7f02004c;
+        public static final int img_return_current_play=0x7f02004d;
+        public static final int notification_template_icon_bg=0x7f02004e;
     }
     public static final class id {
         public static final int action0=0x7f0c006d;

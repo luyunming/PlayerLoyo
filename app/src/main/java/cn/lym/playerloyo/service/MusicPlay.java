@@ -8,9 +8,6 @@ import android.os.IBinder;
 
 import java.io.IOException;
 
-/**
- * Created by lym on 2015/6/29.
- */
 public class MusicPlay extends Service {
     String musicPath;
     private MediaPlayer musicPlayer = new MediaPlayer();
