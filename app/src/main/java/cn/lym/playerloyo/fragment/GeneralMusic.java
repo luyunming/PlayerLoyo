@@ -14,16 +14,12 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import cn.lym.playerloyo.R;
 import cn.lym.playerloyo.adapter.MusicListFragment;
 
-/**
- * Created by lym on 2015/7/2.
- */
 public class GeneralMusic extends Fragment implements View.OnClickListener {
     private int offset = 0;
     private int currentPageIndex = 0;
@@ -102,7 +98,6 @@ public class GeneralMusic extends Fragment implements View.OnClickListener {
                 animation.setFillAfter(true);// True:图片停在动画结束位置
                 animation.setDuration(300);
                 currentPage.startAnimation(animation);
-                Toast.makeText(getActivity(), "您选择了" + musicPager.getCurrentItem() + "页卡", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -26,6 +26,7 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
 
     private String musicPath;
     private String musicName;
+    private String musicSinger;
     private ViewPager current_play_music;
     private ImageView toMusicList;
     private TextView showMusicName;
@@ -35,7 +36,7 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
     private Fragment musicInfo, musicImage, musicWords;
     private ArrayList<Fragment> fragmentList;
     private MusicPlay.MusicBinder musicBinder;
-    private Intent MusicListInfo;
+    private Intent musicListInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,10 +120,11 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
     }
 
     public void getMusicIntent() {
-        MusicListInfo = getIntent();
-        musicPath = MusicListInfo.getStringExtra("musicPath");
-        musicName = MusicListInfo.getStringExtra("musicName");
-        MyBinderParcel musicBinderParcel = MusicListInfo.getParcelableExtra("musicBinderParcel");
+        musicListInfo = getIntent();
+        musicPath = musicListInfo.getStringExtra("musicPath");
+        musicName = musicListInfo.getStringExtra("musicName");
+        musicSinger = musicListInfo.getStringExtra("musicSinger");
+        MyBinderParcel musicBinderParcel = musicListInfo.getParcelableExtra("musicBinderParcel");
         musicBinder = musicBinderParcel.getMyBinder();
         initPlayMusic();
 
@@ -196,8 +198,8 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
     public void returnMusicList() {
         Bundle bundle = new Bundle();
         bundle.putString("musicPath", musicPath);
-        MusicListInfo.putExtras(bundle);
-        CurrentPlay.this.setResult(200, MusicListInfo);
+        musicListInfo.putExtras(bundle);
+        CurrentPlay.this.setResult(200, musicListInfo);
         CurrentPlay.this.finish();
     }
 

@@ -1,11 +1,13 @@
 package cn.lym.playerloyo.activity;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,10 +15,12 @@ import android.widget.TextView;
 import java.io.File;
 
 import cn.lym.playerloyo.R;
+import cn.lym.playerloyo.fragment.GeneralMusic;
 import cn.lym.playerloyo.parcelable.MyBinderParcel;
 import cn.lym.playerloyo.service.MusicPlay;
+import cn.lym.playerloyo.util.MP3Info;
 
-public class MusicList extends Activity implements View.OnClickListener {
+public class MusicList extends FragmentActivity implements View.OnClickListener {
 
     private String musicName;
     private String musicSinger;
@@ -25,6 +29,9 @@ public class MusicList extends Activity implements View.OnClickListener {
     private TextView playingMusicName, playingMusicSinger;
     private MusicPlay.MusicBinder musicBinder;
     private ServiceConnection conn;
+    private FragmentManager fm;
+    private GeneralMusic generalMusic;
+    private MP3Info mp3Info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,7 @@ public class MusicList extends Activity implements View.OnClickListener {
         setAllOnClickListener();
         initPlayMusicArea();
         initPlayService();
+        initFragment();
     }
 
     public void initTest() {
@@ -66,7 +74,11 @@ public class MusicList extends Activity implements View.OnClickListener {
             playOrPause.setImageResource(R.drawable.img_play_1);
         } else {
             playingMusicName.setText(musicName);
-            playingMusicSinger.setText(musicSinger);
+            if (musicSinger == null) {
+                playingMusicSinger.setText("无");
+            } else {
+                playingMusicSinger.setText(musicSinger);
+            }
             if (musicBinder.isPlaying()) {
                 playOrPause.setImageResource(R.drawable.img_pause_1);
             } else {
@@ -88,6 +100,14 @@ public class MusicList extends Activity implements View.OnClickListener {
             }
         };
         bindService(intent, conn, BIND_AUTO_CREATE);
+    }
+
+    public void initFragment() {
+        fm = getSupportFragmentManager();
+        generalMusic = new GeneralMusic();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.linear_layout_music_list_1, generalMusic);
+        ft.commit();
     }
 
     @Override
@@ -124,10 +144,14 @@ public class MusicList extends Activity implements View.OnClickListener {
 
     public void startMusic() {
         File path = new File(musicPath);
-        musicName = path.getName();
-        musicBinder.initMusic(musicPath);
-        musicBinder.startMusic();
-        initPlayMusicArea();
+        if (path.exists()) {
+            musicName = path.getName();
+            mp3Info = new MP3Info(path);
+            musicSinger = mp3Info.getArtist();
+            musicBinder.initMusic(musicPath);
+            musicBinder.startMusic();
+            initPlayMusicArea();
+        }
     }
 
     public void sendSelectMusicToCurrentPlay() {
@@ -135,6 +159,7 @@ public class MusicList extends Activity implements View.OnClickListener {
         Bundle bundle = new Bundle();
         bundle.putString("musicPath", musicPath);
         bundle.putString("musicName", musicName);
+        bundle.putString("musicSinger", musicSinger);
         bundle.putParcelable("musicBinderParcel", new MyBinderParcel(musicBinder));
         intent.putExtras(bundle);
         startActivityForResult(intent, 200);
