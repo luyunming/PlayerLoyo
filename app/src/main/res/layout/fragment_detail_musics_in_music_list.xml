@@ -31,15 +31,15 @@
             android:id="@+id/image_view_fragment_detail_search_in_there"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="10"
-            android:src="@drawable/img_page_focused"/>
+            android:layout_weight="15"
+            android:src="@drawable/img_search"/>
 
         <ImageView
             android:id="@+id/image_view_fragment_detail_menu_more"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="10"
-            android:src="@drawable/img_play_next"/>
+            android:layout_weight="15"
+            android:src="@drawable/img_more"/>
 
     </LinearLayout>
 

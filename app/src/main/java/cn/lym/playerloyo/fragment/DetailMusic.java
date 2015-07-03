@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import cn.lym.playerloyo.R;
 
-public class DetailMusic extends Fragment implements View.OnClickListener {
+public class DetailMusic extends Fragment {
 
     private View view;
     private ImageView returnGeneral;
@@ -27,8 +27,11 @@ public class DetailMusic extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_detail_musics_in_music_list, container, false);
         init();
         shareDetail.initDetail();
-        setAllOnClickListener();
         return view;
+    }
+
+    public void setCurrentCatalogue(String Ccl) {
+        currentCatalogue.setText(Ccl);
     }
 
     public void init() {
@@ -39,23 +42,11 @@ public class DetailMusic extends Fragment implements View.OnClickListener {
         theseMusic = (ListView) view.findViewById(R.id.list_view_fragment_detail);
     }
 
-    public void setAllOnClickListener() {
-        returnGeneral.setOnClickListener(this);
-        searchInThere.setOnClickListener(this);
-        menuMore.setOnClickListener(this);
-        theseMusic.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.image_view_fragment_detail_return:
-                shareDetail.returnToGeneral();
-                break;
-            default:
-                break;
-        }
-
+    public void setAllOnClickListener(View.OnClickListener On) {
+        returnGeneral.setOnClickListener(On);
+        searchInThere.setOnClickListener(On);
+        menuMore.setOnClickListener(On);
+        theseMusic.setOnClickListener(On);
     }
 
     @Override

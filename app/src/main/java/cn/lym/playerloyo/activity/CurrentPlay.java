@@ -17,8 +17,8 @@ import cn.lym.playerloyo.constant.Constant;
 import cn.lym.playerloyo.fragment.MusicImageInCurrentPlay;
 import cn.lym.playerloyo.fragment.MusicInfoInCurrentPlay;
 import cn.lym.playerloyo.fragment.MusicWordsInCurrentPlay;
-import cn.lym.playerloyo.parcelable.MyBinderParcel;
 import cn.lym.playerloyo.service.MusicPlay;
+import cn.lym.playerloyo.util.BinderParcel;
 
 public class CurrentPlay extends FragmentActivity implements View.OnClickListener {
 
@@ -124,8 +124,8 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
         musicPath = musicListInfo.getStringExtra("musicPath");
         musicName = musicListInfo.getStringExtra("musicName");
         musicSinger = musicListInfo.getStringExtra("musicSinger");
-        MyBinderParcel musicBinderParcel = musicListInfo.getParcelableExtra("musicBinderParcel");
-        musicBinder = musicBinderParcel.getMyBinder();
+        BinderParcel musicBinderParcel = musicListInfo.getParcelableExtra("musicBinderParcel");
+        musicBinder = (MusicPlay.MusicBinder) musicBinderParcel.getBinder();
         initPlayMusic();
 
     }
@@ -204,6 +204,7 @@ public class CurrentPlay extends FragmentActivity implements View.OnClickListene
     }
 
     public void exitThis() {
+        android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }
 }

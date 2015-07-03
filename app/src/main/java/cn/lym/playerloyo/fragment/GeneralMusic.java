@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.lym.playerloyo.R;
+import cn.lym.playerloyo.activity.MusicList;
 import cn.lym.playerloyo.adapter.MusicListFragment;
 
 public class GeneralMusic extends Fragment implements View.OnClickListener {
@@ -110,8 +111,8 @@ public class GeneralMusic extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            default:
-                break;
+            case R.id.image_view_fragment_general_return_current_play:
+                ((MusicList) getActivity()).sendSelectMusicToCurrentPlay();
         }
     }
 }

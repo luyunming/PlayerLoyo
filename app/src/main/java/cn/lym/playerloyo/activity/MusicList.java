@@ -15,9 +15,10 @@ import android.widget.TextView;
 import java.io.File;
 
 import cn.lym.playerloyo.R;
+import cn.lym.playerloyo.fragment.DetailMusic;
 import cn.lym.playerloyo.fragment.GeneralMusic;
-import cn.lym.playerloyo.parcelable.MyBinderParcel;
 import cn.lym.playerloyo.service.MusicPlay;
+import cn.lym.playerloyo.util.BinderParcel;
 import cn.lym.playerloyo.util.MP3Info;
 
 public class MusicList extends FragmentActivity implements View.OnClickListener {
@@ -31,7 +32,9 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
     private ServiceConnection conn;
     private FragmentManager fm;
     private GeneralMusic generalMusic;
+    private DetailMusic detailMusic;
     private MP3Info mp3Info;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +108,10 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
     public void initFragment() {
         fm = getSupportFragmentManager();
         generalMusic = new GeneralMusic();
+        detailMusic = new DetailMusic();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.linear_layout_music_list_1, generalMusic);
+        ft.addToBackStack("generalMusic");
         ft.commit();
     }
 
@@ -122,9 +127,6 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
             case R.id.image_view_music_list_playing_list:
                 startMusic();
                 break;
-//            case R.id.image_view_music_list_menu_more:
-//                exitThis();
-//                break;
             default:
                 break;
         }
@@ -146,8 +148,8 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
         File path = new File(musicPath);
         if (path.exists()) {
             musicName = path.getName();
-            mp3Info = new MP3Info(path);
-            musicSinger = mp3Info.getArtist();
+            mp3Info = new MP3Info(musicPath);
+            musicSinger = mp3Info.getSinger();
             musicBinder.initMusic(musicPath);
             musicBinder.startMusic();
             initPlayMusicArea();
@@ -160,7 +162,7 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
         bundle.putString("musicPath", musicPath);
         bundle.putString("musicName", musicName);
         bundle.putString("musicSinger", musicSinger);
-        bundle.putParcelable("musicBinderParcel", new MyBinderParcel(musicBinder));
+        bundle.putParcelable("musicBinderParcel", new BinderParcel(musicBinder));
         intent.putExtras(bundle);
         startActivityForResult(intent, 200);
     }
@@ -174,7 +176,12 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
         }
     }
 
+    public void setMusicPath(String path) {
+        this.musicPath = path;
+    }
+
     public void exitThis() {
+        android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }
 }
