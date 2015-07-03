@@ -68,7 +68,7 @@
             android:textSize="18sp"/>
 
         <TextView
-            android:id="@+id/text_view_general_music_according_catalogue"
+            android:id="@+id/text_view_general_music_according_folder"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="100"

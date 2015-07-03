@@ -12,7 +12,7 @@ public class GetAllMusic {
     }
 
     // 遍历接收一个文件路径，然后把文件子目录中的所有文件遍历并输出来
-    public String[] searchMusic(String path) {
+    public List<String> searchMusic(String path) {
         File file = new File(path);
         File files[] = file.listFiles();
         if (files != null) {
@@ -21,10 +21,10 @@ public class GetAllMusic {
                     searchMusic(f.toString());
                 } else if (f.getName().toLowerCase().endsWith(".mp3")) {
                     list.add(f.toString());
+                    System.out.println(f.toString());
                 }
             }
         }
-        String[] x = (String[]) list.toArray();
-        return x;
+        return list;
     }
 }

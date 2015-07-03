@@ -29,6 +29,7 @@ public class GeneralMusic extends Fragment implements View.OnClickListener {
     private ImageView returnCurrentPlay;
     private TextView currentCatalogue;
     private ImageView searchInThere;
+    private TextView textViewMusicName, textViewSinger, textViewFolder;
     private ImageView currentPage;
     private ViewPager musicPager;
     private ArrayList<Fragment> fragments;
@@ -65,6 +66,9 @@ public class GeneralMusic extends Fragment implements View.OnClickListener {
 
     public void initTextView() {
         currentCatalogue = (TextView) view.findViewById(R.id.text_view_fragment_general_current_catalogue);
+        textViewMusicName = (TextView) view.findViewById(R.id.text_view_general_music_according_music_name);
+        textViewSinger = (TextView) view.findViewById(R.id.text_view_general_music_according_music_singer);
+        textViewFolder = (TextView) view.findViewById(R.id.text_view_general_music_according_folder);
         currentCatalogue.setText("本地音乐");
     }
 
@@ -106,6 +110,9 @@ public class GeneralMusic extends Fragment implements View.OnClickListener {
     public void setAllOnClickListener() {
         returnCurrentPlay.setOnClickListener(this);
         searchInThere.setOnClickListener(this);
+        textViewMusicName.setOnClickListener(this);
+        textViewSinger.setOnClickListener(this);
+        textViewFolder.setOnClickListener(this);
     }
 
     @Override
@@ -113,6 +120,16 @@ public class GeneralMusic extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.image_view_fragment_general_return_current_play:
                 ((MusicList) getActivity()).sendSelectMusicToCurrentPlay();
+                break;
+            case R.id.text_view_general_music_according_music_name:
+                musicPager.setCurrentItem(0);
+                break;
+            case R.id.text_view_general_music_according_music_singer:
+                musicPager.setCurrentItem(1);
+                break;
+            case R.id.text_view_general_music_according_folder:
+                musicPager.setCurrentItem(2);
+                break;
         }
     }
 }

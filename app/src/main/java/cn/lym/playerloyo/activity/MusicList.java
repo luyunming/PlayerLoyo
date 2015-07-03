@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.List;
 
 import cn.lym.playerloyo.R;
 import cn.lym.playerloyo.fragment.DetailMusic;
@@ -29,12 +30,11 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
     private ImageView musicPicture, playOrPause, playingList;
     private TextView playingMusicName, playingMusicSinger;
     private MusicPlay.MusicBinder musicBinder;
-    private ServiceConnection conn;
     private FragmentManager fm;
+    private FragmentTransaction ft;
     private GeneralMusic generalMusic;
     private DetailMusic detailMusic;
-    private MP3Info mp3Info;
-
+    private List<String> allMusicPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,7 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
 
     public void initPlayService() {
         Intent intent = new Intent(this, MusicPlay.class);
-        conn = new ServiceConnection() {
+        ServiceConnection conn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 musicBinder = (MusicPlay.MusicBinder) service;
@@ -108,11 +108,20 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
     public void initFragment() {
         fm = getSupportFragmentManager();
         generalMusic = new GeneralMusic();
-        detailMusic = new DetailMusic();
-        FragmentTransaction ft = fm.beginTransaction();
+        ft = fm.beginTransaction();
         ft.replace(R.id.linear_layout_music_list_1, generalMusic);
+        ft.commit();
+    }
+
+    public void changeFragment() {
+        detailMusic = new DetailMusic();
+        ft.replace(R.id.linear_layout_music_list_1, detailMusic);
         ft.addToBackStack("generalMusic");
         ft.commit();
+    }
+
+    public void removeFragment() {
+        fm.popBackStack();
     }
 
     @Override
@@ -148,7 +157,7 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
         File path = new File(musicPath);
         if (path.exists()) {
             musicName = path.getName();
-            mp3Info = new MP3Info(musicPath);
+            MP3Info mp3Info = new MP3Info(musicPath);
             musicSinger = mp3Info.getSinger();
             musicBinder.initMusic(musicPath);
             musicBinder.startMusic();
@@ -178,6 +187,14 @@ public class MusicList extends FragmentActivity implements View.OnClickListener 
 
     public void setMusicPath(String path) {
         this.musicPath = path;
+    }
+
+    public List<String> getAllMusicPath() {
+        return allMusicPath;
+    }
+
+    public void setAllMusicPath(List<String> path) {
+        allMusicPath = path;
     }
 
     public void exitThis() {
